@@ -15,8 +15,8 @@ from typing import Any
 from astropy.io import fits
 import matplotlib.pyplot as plt
 
-import bp_replacement as bp
-from Get_filenames import get_filenames
+import optimal_nod_combo.bp_replacement as bp
+from optimal_nod_combo.Get_filenames import get_filenames
 
 
 # Try parse 4*8 bools.

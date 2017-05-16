@@ -1,7 +1,7 @@
 """Tests for bad pixel replacement."""
 import pytest
 import numpy as np
-import bp_replacement as pb
+import optimal_nod_combo.bp_replacement as pb
 
 
 def test_sigma_detect():

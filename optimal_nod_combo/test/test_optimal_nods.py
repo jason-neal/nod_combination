@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-import optimal_nods_selection as ons
+import optimal_nod_combo.optimal_nods_selection as ons
 
 
 def test_parse_boolgrid():
