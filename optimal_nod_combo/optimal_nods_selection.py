@@ -68,7 +68,7 @@ def _parser():
 
 
 def main(**kwargs):
-    # type: (...) -> bool
+    # type: (...) -> int
     """Main function."""
     # Raising errors on non implemented features.
     if kwargs["spectralcoords"]:
@@ -211,7 +211,7 @@ def main(**kwargs):
 
 def nod_calcs(nods):
     # type: (np.ndarray) -> List[np.ndarray, np.ndarray, np.ndarray]
-    """Returns calculation across the nods."""
+    """Return calculations across the nods."""
     nod_mean = np.mean(nods, axis=0)
     nod_median = np.median(nods, axis=0)
     nod_sum = np.sum(nods, axis=0)
@@ -235,7 +235,8 @@ def clean_nods(nods):
 
 
 def snr_calculations(nod_names, norm_names, nod_mask, chip_num):
-    # Analysis signal to noise in a part of the continuim of each spectra.
+    # type: (List[str], List[str], np.ndarray, int) -> None
+    """Analysis signal to noise in a part of the continuim of each spectra."""
     optimal_nods = [fits.getdata(name)[0, 0] for name in nod_names]
     optimal_norm_nods = [fits.getdata(name)[0, 0] for name in norm_names]
     nonoptimal_nods = [fits.getdata(name)[1, 0] for name in nod_names]
