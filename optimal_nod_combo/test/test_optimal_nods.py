@@ -1,10 +1,11 @@
 import pytest
 import numpy as np
+import pkg_resources
 import optimal_nod_combo.optimal_nods_selection as ons
 
 
 def test_parse_boolgrid():
-    testfile = "boolgrid_test_data.dat"
+    testfile = pkg_resources.resource_filename("optimal_nod_combo", "optimal_nod_combo/data/boolgrid_test_data.dat")
     # 11111011
     # 01111111
     # 11011101

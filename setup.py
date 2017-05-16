@@ -79,7 +79,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     # package_data={"spectrum_overload": ["data/*.fits"]},
-    package_data={"optimal_nod_combo", "optimal_nod_combo/data/*"},
+    package_data={"optimal_nod_combo": ["data/*.dat"]},
 
     data_files=[],
 
