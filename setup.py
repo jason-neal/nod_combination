@@ -83,14 +83,13 @@ setup(
 
     data_files=[],
 
+    scripts=['bin/combine_nods'],
+
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         #    'console_scripts': [
         #        'sample=sample:main',
-        'console_scripts': [
-            'optimal_nods_selection=optimal_nods_selection:main',
-        ],
     },
 )
