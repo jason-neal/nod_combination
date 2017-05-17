@@ -152,6 +152,9 @@ def main(**kwargs):
                 plt.plot(mean_nods, label="{}".format(nod_combo_name))
                 plt.plot(mean_pbfix_nods, label="Fixed {}".format(nod_combo_name))
                 plt.ylabel("Flux")
+                ax = plt.gca()
+                ax.tick_params(labelbottom='off')    # Remove xticks on top plot
+
                 plt.legend()
                 if kwargs["unnorm"]:
                     plt.title("Combined Spectra")
