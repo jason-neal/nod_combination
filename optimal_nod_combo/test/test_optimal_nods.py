@@ -1,6 +1,7 @@
-import pytest
 import numpy as np
 import pkg_resources
+import pytest
+
 import optimal_nod_combo.optimal_nods_selection as ons
 
 

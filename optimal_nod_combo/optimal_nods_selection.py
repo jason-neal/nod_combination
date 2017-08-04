@@ -5,15 +5,17 @@
 Median and norm Combine spectra after
 """
 from __future__ import division, print_function
+
+import argparse
+import logging
 import os
 import sys
-import logging
-import argparse
-import numpy as np
-from tqdm import tqdm
 from typing import Any
-from astropy.io import fits
+
 import matplotlib.pyplot as plt
+import numpy as np
+from astropy.io import fits
+from tqdm import tqdm
 
 import optimal_nod_combo.bp_replacement as bp
 from optimal_nod_combo.Get_filenames import get_filenames

@@ -1,9 +1,10 @@
 """Identify bad pixel in nod observations and interpolate over them."""
 import logging
+from typing import Any, List, Tuple, Union
+
+import matplotlib.pyplot as plt
 import numpy as np
 from astropy.io import fits
-import matplotlib.pyplot as plt
-from typing import List, Tuple, Any, Union
 
 
 def sigma_detect(nods, plot=True):

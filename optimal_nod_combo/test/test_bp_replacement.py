@@ -1,6 +1,7 @@
 """Tests for bad pixel replacement."""
-import pytest
 import numpy as np
+import pytest
+
 import optimal_nod_combo.bp_replacement as pb
 
 
