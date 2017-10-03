@@ -2,4 +2,4 @@ argparse==1.4.0
 numpy==1.13.3
 astropy==2.0.2
 matplotlib==2.0.2
-tqdm==4.17.1
+tqdm==4.19.1
