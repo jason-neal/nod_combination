@@ -12,6 +12,11 @@ long_description = " "
 
 base_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)))
 
+
+about = {}
+with open(os.path.join(base_dir, "optimal_nod_combo", "__about__.py")) as f:
+    exec(f.read(), about)
+
 # https://www.reddit.com/r/Python/comments/3uzl2a/setuppy_requirementstxt_or_a_combination/
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -22,7 +27,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="0.1",
+    version=about["__version__"]
 
     description='Combine optimal-nonoptimal nod-cycle extracted spectra with sigma clipping.',
     long_description=long_description,
@@ -45,7 +50,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords=['astronomy', "nod cycle", "NIR Spectroscopy"],
+    keywords=['astronomy', "nod cycle", "NIR Spectroscopy", "CRIRES"],
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().

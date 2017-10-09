@@ -2,12 +2,9 @@ language: python
 python:
   - "3.5"
   - "3.6"
-  - nightly
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - python: nightly
 
 before_install:
   # http://conda.pydata.org/docs/travis.html
@@ -34,7 +31,7 @@ install:
   - python setup.py install
 
 script:
-  - pytest --cov=optimal_nod_combo/ --cov-report term-missing --durations 5
+  - pytest --cov=optimal_nod_combo --cov-report term-missing --durations 5
 
 after_success:
   - coveralls
