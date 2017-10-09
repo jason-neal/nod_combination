@@ -27,7 +27,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=about["__version__"]
+    version=about["__version__"],
 
     description='Combine optimal-nonoptimal nod-cycle extracted spectra with sigma clipping.',
     long_description=long_description,
