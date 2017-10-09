@@ -6,7 +6,7 @@ import optimal_nod_combo.optimal_nods_selection as ons
 
 
 def test_parse_boolgrid():
-    testfile = pkg_resources.resource_filename("optimal_nod_combo", "optimal_nod_combo/data/boolgrid_test_data.dat")
+    testfile = pkg_resources.resource_filename("optimal_nod_combo", "data/boolgrid_test_data.dat")
     # 11111011
     # 01111111
     # 11011101
@@ -31,6 +31,7 @@ def test_sampled_snr(snr, chip, seed):
     """
     # limits = {1: [900, 960], 2: [460, 600], 3: [240, 310], 4: [450, 490]}
     np.random.seed(seed)  # Fix the seed
-    x = np.random.normal(1.0, 0.1 / snr, 10000)
+    x = np.random.normal(1.0, 1 / snr, 1000)
+
     # sampled snr within 10% of specified value.
-    assert (abs(ons.sampled_snr(x, chip) - snr) / snr) < 0.10
+    assert (abs(ons.sampled_snr(x, chip) - snr) / snr) < 0.1
