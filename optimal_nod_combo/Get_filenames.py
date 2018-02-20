@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-"""Get Filenames of files that match regular expresion.
+"""Get File names of files that match regular expression.
 
 Possibly better to use the glob module.
 """
@@ -21,7 +21,7 @@ def get_filenames(path: str, regexp: str, regexp2: Optional[str] = None) -> List
     os.chdir(path)
     filelist = []
     for file in os.listdir('.'):
-        if regexp2 is not None:  # Match two regular expresions
+        if regexp2 is not None:  # Match two regular expressions
             if fnmatch.fnmatch(file, regexp) and fnmatch.fnmatch(file, regexp2):
                 filelist.append(file)
         else:

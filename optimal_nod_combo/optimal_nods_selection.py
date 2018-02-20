@@ -37,7 +37,9 @@ def parse_boolgrid(filename: str, nod: int = 8, chip: int = 4) -> ndarray:
                     boolgrid[line_num, nod_num] = bool(int(val))
                 line_num += 1
     return boolgrid
-# DRACS Output quicklook/status.
+
+
+# DRACS Output quick-look/status.
 
 
 # Plot all 8 reduced spectra
@@ -51,13 +53,13 @@ def _parser() -> argparse.Namespace:
     # parser = GooeyParser(description='Remove : from data files')
     parser = argparse.ArgumentParser(description='Combines Nods using ')
     parser.add_argument('listspectra', help='List of spectra to combine.', default=False)
-    parser.add_argument('-o', "--optimal-nods", help="Optimal nod bool matix file.")
+    parser.add_argument('-o', "--optimal-nods", help="Optimal nod bool matrix file.")
     parser.add_argument("-s", "--spectralcoords", default=False, action="store_true",
-                        help="Turn spectra into spectral corrdinates first before adding. Default=False")
+                        help="Turn spectra into spectral coordinates first before adding. Default=False")
     parser.add_argument("-n", "--nod_num", help="Number of nods in the nod cycle, default=8", default=8, type=int)
     parser.add_argument("-c", "--combination", help="Nod combination method, default=all means do all three.",
                         default="all", choices=["all", "optimal", "non-opt", "mix"])
-    parser.add_argument("-u", "--unnorm", help="Combine the unnormalized nods.", action="store_true")
+    parser.add_argument("-u", "--unnorm", help="Combine the un-normalized nods.", action="store_true")
     parser.add_argument("--snr", help="Show snr of continuum.", action="store_true")
     parser.add_argument("-p", "--plot", help="Show the plots.", action="store_true")
     parser.add_argument("--output_verify", help="Fits file verification mode", default="fix+warn")
@@ -80,7 +82,7 @@ def main(**kwargs) -> int:
         comb_methods = ["optimal", "non-opt", "mix"]
     else:
         comb_methods = kwargs["combination"]
-    print("Combiunation mehtod", comb_methods)
+    print("Combination method", comb_methods)
 
     # Get optimal nod grid
     if kwargs["optimal_nods"]:
@@ -113,10 +115,10 @@ def main(**kwargs) -> int:
 
         if kwargs["unnorm"]:
             nod_names = get_filenames(intermediate_path, 'CRIRE*.ms.fits', "*_{0}.*".format(chip_num))
-            word_split = "ms"        # For saving
+            word_split = "ms"  # For saving
         else:
             nod_names = get_filenames(intermediate_path, 'CRIRE*.ms.norm.fits', "*_{0}.*".format(chip_num))
-            word_split = "ms.norm"   # For saving
+            word_split = "ms.norm"  # For saving
 
         combined_data = fits.getdata(os.path.join(combined_path, combined_name[0]))
         for combo in comb_methods:
@@ -151,7 +153,7 @@ def main(**kwargs) -> int:
                 plt.plot(mean_pbfix_nods, label="Fixed {}".format(nod_combo_name))
                 plt.ylabel("Flux")
                 ax = plt.gca()
-                ax.tick_params(labelbottom='off')    # Remove xticks on top plot
+                ax.tick_params(labelbottom='off')  # Remove x-ticks on top plot
 
                 plt.legend()
                 if kwargs["unnorm"]:
@@ -184,7 +186,7 @@ def main(**kwargs) -> int:
                 combo_ext = ".mixavg.fits"
 
             first_obsname = nod_names[0]
-            obs_name = os.path.split(first_obsname)[1]  # incase path is included.
+            obs_name = os.path.split(first_obsname)[1]  # In case path is included.
             obs_prefix = obs_name.split(word_split)[0]
             header = fits.getheader(first_obsname)
 
@@ -194,14 +196,15 @@ def main(**kwargs) -> int:
             header["NodSelectionMethod"] = (nod_combo_name, "Method of selecting nod spectra.")
             header["CombinationMethod"] = ("Average", "Method of combing nod spectra.")
             header["BadPixelNum"] = (len(bad_pixels), " Number of points removed from nod spectra.")
-            header["comment"] = "4 sigma bad pixel detction performed"
+            header["comment"] = "4 sigma bad pixel detection performed"
             header["comment"] = "All nods and 2 pixels either side of each pixel recursively."
             header["comment"] = "Bad pixels found >4sigma = {}".format(bad_pixels)
 
-            # Convience function to save fits file.
+            # Convenience function to save fits file.
 
             # Fix fits files to allow floating point numbers with lower case "e".
-            fits.writeto(output_name, mean_pbfix_nods, header, output_verify=kwargs["output_verify"], overwrite=kwargs["overwrite"])
+            fits.writeto(output_name, mean_pbfix_nods, header, output_verify=kwargs["output_verify"],
+                         overwrite=kwargs["overwrite"])
             print("Saved nod combination to {}".format(output_name))
             created_files += [output_name]
     print("\nList of created files")
@@ -267,6 +270,7 @@ def snr_calculations(nod_names: List[str], norm_names: List[str], nod_mask: ndar
 
 
 def sampled_snr(spectrum: ndarray, chip: int) -> float64:
+    """Sample SNR with Predefined continuum locations per chip."""
     limits = {1: [900, 960], 2: [460, 600], 3: [240, 310], 4: [450, 490]}
     section = spectrum[slice(limits[chip][0], limits[chip][1])]
     return np.mean(section) / np.std(section)
@@ -274,6 +278,5 @@ def sampled_snr(spectrum: ndarray, chip: int) -> float64:
 
 if __name__ == "__main__":
     args = vars(_parser())
-
     opts = {k: args[k] for k in args}
     sys.exit(main(**opts))

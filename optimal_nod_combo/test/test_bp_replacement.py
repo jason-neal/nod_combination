@@ -6,7 +6,7 @@ import optimal_nod_combo.bp_replacement as pb
 
 
 def test_sigma_detect():
-    """Create a dataset. Add a value that is outside 4 sigma.
+    """Create a data set. Add a value that is outside 4 sigma.
 
     See if they are identified correctly.
     """
@@ -21,7 +21,7 @@ def test_sigma_detect():
         else:
             slice_data = data[:, bad_loc[1] - 2: bad_loc[1] + 3]
         data[bad_loc[0], bad_loc[1]] += (8 * np.std(slice_data.ravel()) *
-                                         (2 * np.random.randint(0, 2) - 1))   # add sign
+                                         (2 * np.random.randint(0, 2) - 1))  # add sign
 
     bad_pixel_record = pb.sigma_detect(data, plot=False)
 
@@ -41,12 +41,12 @@ def test_sigma_detect():
     ([[1, 10], [2, 10], [3, 10]], False),
     ([[1, 7], [2, 8], [4, 9]], False)])
 def test_consecutive_badpixels(test_input, expected):
-    """Test detection of consecutives."""
+    """Test detection of consecutive pixels."""
     assert pb.consec_badpixels(test_input) == expected
 
 
 def test_warn_consec_badpixels():
-    """Test warn consutive throws and error."""
+    """Test warn consecutive throws and error."""
     with pytest.raises(ValueError):
         pb.warn_consec_badpixels([[1, 10], [1, 11]])
 
@@ -99,7 +99,7 @@ def test_bad_pixel_interp_types():
     bad_pixels = np.array([[1, 2], [3, 4]])
 
     with pytest.raises(TypeError):
-        pb.interp_badpixels(np.array([1, 2, 3]), bad_pixels)   # second value should be a list
+        pb.interp_badpixels(np.array([1, 2, 3]), bad_pixels)  # second value should be a list
 
     with pytest.raises(TypeError):
         pb.interp_badpixels([1, 2, 3], list(bad_pixels))  # first values should not be a list
@@ -153,7 +153,7 @@ def test_fail_on_small_array(test_in):
 
 
 def test_allbadpixels():
-    """A completly bad row is unchanged."""
+    """A completely bad row is unchanged."""
     nods = np.array([[-99, -99, -99], [-99, -99, 1]], dtype=np.float32)
     expected_array = np.array([[-99, -99, -99], [1, 1, 1]], dtype=np.float32)
 

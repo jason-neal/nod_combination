@@ -19,9 +19,9 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[List[
     sig_clip = sigma
     if nods.shape[0] > 8:
         raise ValueError("Too many nods (>8), check dimensions of input. ([nod, pixel])")
-    # aviod mutation
+    # Avoid mutation
     old_nods = np.empty_like(nods)
-    old_nods[:] = np.nan   # set to nans to start iteration
+    old_nods[:] = np.nan  # set to nans to start iteration
     new_nods = np.empty_like(nods)
     new_nods[:] = nods
 
@@ -29,24 +29,24 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[List[
     bad_pixel_record = [] # type: List[List[Union[int, float]]]
 
     iteration = 0
-    # Iterate untill no more bad pixels are replaced by nans during an iteration. or less than 5.
+    # Iterate until no more bad pixels are replaced by nans during an iteration. or less than 5.
     while ((iteration < 5) & np.any(np.isnan(old_nods) != np.isnan(new_nods))):
         old_nods[:] = new_nods
         for pixel in range(new_nods.shape[1]):
             if (pixel < 2):
-                near_pixels = new_nods[:, :5]      # First 5 pixels to do the 2 end pixels..
+                near_pixels = new_nods[:, :5]  # First 5 pixels to do the 2 end pixels..
                 grid_index = pixel
             elif pixel > (new_nods.shape[1] - 3):
-                near_pixels = new_nods[:, -5:]     # Last 5 pixels to do the last 2 end pixels..
+                near_pixels = new_nods[:, -5:]  # Last 5 pixels to do the last 2 end pixels..
                 grid_index = pixel - new_nods.shape[1]
             else:
                 near_pixels = new_nods[:, slice(pixel - 2, pixel + 3)]
                 grid_index = 2
 
-            # ravel pixels near this picel output
+            # Ravel pixels near this pixel output
             ravel_pixels = near_pixels.ravel()
-            median = np.nanmedian(ravel_pixels)   # ignore nan values
-            std = np.nanstd(ravel_pixels)         # ignore nan values
+            median = np.nanmedian(ravel_pixels)  # ignore nan values
+            std = np.nanstd(ravel_pixels)  # ignore nan values
 
             # The values of this pixel for all nods, taken from near_pixels. Should be same as new_nods[:, pixel]
             this_pixel = near_pixels[:, grid_index]
@@ -67,7 +67,6 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[List[
         iteration += 1
 
     print("# Pixels outside {0}sigma = {1}".format(sig_clip, bad_pixel_count))
-    # print("bad_pixel_record", bad_pixel_record)
 
     if plot:
         for i, nod in enumerate(nods):
@@ -92,17 +91,17 @@ def interp_badpixels(nods: ndarray,
     If it is at the end then just replace with the next pixel value.
 
     Parameters:
-    nods: array
+    nods: ndarray
         A nod*pixel array of the pixel flux values.
     bad_pixels: list of lists of ints
         Index position [nod, pixel] of bad pixels to replace.
 
     Returns
     -------
-    nods: array
+    nods: ndarray
         Array of nods with bad pixels interpolated over.
     """
-    if isinstance(nods, list):
+    if not isinstance(nods, ndarray):
         raise TypeError("Input an nod*pixel array please.")
 
     if not isinstance(bad_pixels, list):
@@ -115,7 +114,7 @@ def interp_badpixels(nods: ndarray,
     # Warn about consecutive bad_pixels
     warn_consec_badpixels(bad_pixels, stop=False)
     output = np.empty_like(nods)
-    output[:] = nods            # aviods mutation
+    output[:] = nods  # avoids mutation
 
     for pixel in bad_pixels:
         # Count any consecutive bad pixels
@@ -126,18 +125,18 @@ def interp_badpixels(nods: ndarray,
             logging.warning("Interpolating over more than 5 bad pixels in a row.")
 
         if (bp_left + bp_right + 1) == nods.shape[1]:
-            replacement = nods[pixel[0], pixel[1]]           # Replace with self as all others are bad.
-        elif pixel[1] == 0:                                  # first vaue
+            replacement = nods[pixel[0], pixel[1]]  # Replace with self as all others are bad.
+        elif pixel[1] == 0:  # first value
             replacement = nods[pixel[0], pixel[1] + 1 + bp_right]
 
-        elif pixel[1] == (nods.shape[1] - 1):                # Last vaue
+        elif pixel[1] == (nods.shape[1] - 1):  # Last value
             replacement = nods[pixel[0], pixel[1] - 1 - bp_left]
 
-        elif (nods.shape[1] - pixel[1] - 1) == bp_right:   # All bad pixels until the end
-                    replacement = nods[pixel[0], pixel[1] - 1 - bp_left]
+        elif (nods.shape[1] - pixel[1] - 1) == bp_right:  # All bad pixels until the end
+            replacement = nods[pixel[0], pixel[1] - 1 - bp_left]
 
-        elif pixel[1] == bp_left:                             # All bad pixels to the left
-                    replacement = nods[pixel[0], pixel[1] + 1 + bp_right]
+        elif pixel[1] == bp_left:  # All bad pixels to the left
+            replacement = nods[pixel[0], pixel[1] + 1 + bp_right]
         else:
             x = range(0 - bp_left, 3 + bp_right)
             xp = [0 - bp_left, 2 + bp_right]
@@ -171,7 +170,7 @@ def right_consec_search(pixel: List[int], bad_pixels: List[List[int]]) -> int:
 
 
 def consec_badpixels(bad_pixels: List[List[int]]) -> bool:
-    """Check for consecutive badpixels in the same nod.
+    """Check for consecutive bad pixels in the same nod.
 
     Consecutive in in axis=1 for the same axis=0 value.
 
@@ -183,7 +182,7 @@ def consec_badpixels(bad_pixels: List[List[int]]) -> bool:
     returns
     -------
     is_consec: bool
-        True if a consecutve bad pixel found."""
+        True if a consecutive bad pixel found."""
 
     for pixel in bad_pixels:
         left_pix = [pixel[0], pixel[1] - 1]
@@ -195,7 +194,7 @@ def consec_badpixels(bad_pixels: List[List[int]]) -> bool:
 
 
 def warn_consec_badpixels(bad_pixels: List[List[int]], stop: bool = True) -> None:
-    """Raise erro on consecutive badpixels in the same nod.
+    """Raise error on consecutive bad pixels in the same nod.
 
     parameters
     ----------
@@ -204,7 +203,7 @@ def warn_consec_badpixels(bad_pixels: List[List[int]], stop: bool = True) -> Non
 
     if consec_badpixels(bad_pixels):
         if stop:
-            raise ValueError("Consective bad pixels were found. Need to deal with these.")
+            raise ValueError("Consecutive bad pixels were found. Need to deal with these.")
         else:
-            logging.warning("Consective bad pixels in a nod were found.")
+            logging.warning("Consecutive bad pixels in a nod were found.")
     return None
