@@ -1,20 +1,20 @@
 """Identify bad pixel in nod observations and interpolate over them."""
 import logging
-from typing import Any, List, Tuple, Union
+from typing import List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-from astropy.io import fits
+from numpy import int32, ndarray
 
 
-def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[Tuple[int32, int]]:
+def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[List[int]]:
     """Detect the local pixels that are outside 4 sigma from all nods.
 
     Local means 2 pixels either side.
     sigma: int
        The sigma clipping value.
     """
-    if isinstance(nods, list):
+    if not isinstance(nods, ndarray):
         raise TypeError("Input an nod*pixel array please.")
     sig_clip = sigma
     if nods.shape[0] > 8:
@@ -26,7 +26,7 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[Tuple
     new_nods[:] = nods
 
     bad_pixel_count = 0
-    bad_pixel_record = []  # type: List[Tuple[int, int, float]]
+    bad_pixel_record = [] # type: List[List[Union[int, float]]]
 
     iteration = 0
     # Iterate untill no more bad pixels are replaced by nans during an iteration. or less than 5.
@@ -61,7 +61,7 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[Tuple
                     logging.warning("More then one nod has a bad pixel value here, in pixel #{}".format(pixel))
                 for val in bad_nod:
                     bad_pixel_count += 1
-                    bad_pixel_record += [(val, pixel, this_pixel[val])]
+                    bad_pixel_record += [[val, pixel, this_pixel[val]]]
         for record in bad_pixel_record:
             new_nods[record[0], record[1]] = np.nan
         iteration += 1
@@ -82,11 +82,11 @@ def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[Tuple
         plt.ylabel("norm flux")
         plt.show()
 
-    return [pixel[0:2] for pixel in bad_pixel_record]
+    return [[int(pixel[0]), int(pixel[1])] for pixel in bad_pixel_record]
 
 
-def interp_badpixels(nods, bad_pixels):
-    # type: (np.ndarray, List[Union[List[int, int],Tuple[int, int]]]) -> Any
+def interp_badpixels(nods: ndarray,
+                     bad_pixels: Union[List[List[int]], List[ndarray]]) -> ndarray:
     """Linearly interpolate over nearby pixels.
 
     If it is at the end then just replace with the next pixel value.
@@ -150,8 +150,7 @@ def interp_badpixels(nods, bad_pixels):
     return output
 
 
-def left_consec_search(pixel, bad_pixels):
-    # type: (Union[List[int], Tuple[int, int]], List[Union[List[int], Tuple[int, int]]]) -> int
+def left_consec_search(pixel: List[int], bad_pixels: List[List[int]]) -> int:
     """Count number of consecutive bad pixels to the left of this pixel."""
     prev_pixel = [pixel[0], pixel[1] - 1]
     if (prev_pixel in bad_pixels) or (tuple(prev_pixel) in bad_pixels):
@@ -161,8 +160,7 @@ def left_consec_search(pixel, bad_pixels):
         return 0
 
 
-def right_consec_search(pixel, bad_pixels):
-    # type: (Union[List[int, int], Tuple[int, int]], List[Union[List[int, int], Tuple[int, int]]]) -> int
+def right_consec_search(pixel: List[int], bad_pixels: List[List[int]]) -> int:
     """Count number of consecutive bad pixels to the right of this."""
     next_pixel = [pixel[0], pixel[1] + 1]
     if (next_pixel in bad_pixels) or (tuple(next_pixel) in bad_pixels):
@@ -172,8 +170,7 @@ def right_consec_search(pixel, bad_pixels):
         return 0
 
 
-def consec_badpixels(bad_pixels):
-    # type: (List[Union[List[int, int], Tuple[int, int]]]) -> bool
+def consec_badpixels(bad_pixels: List[List[int]]) -> bool:
     """Check for consecutive badpixels in the same nod.
 
     Consecutive in in axis=1 for the same axis=0 value.
@@ -197,8 +194,7 @@ def consec_badpixels(bad_pixels):
     return False
 
 
-def warn_consec_badpixels(bad_pixels, stop=True):
-    # type: (List[Union[List[int, int], Tuple[int, int]]], bool) -> None
+def warn_consec_badpixels(bad_pixels: List[List[int]], stop: bool = True) -> None:
     """Raise erro on consecutive badpixels in the same nod.
 
     parameters

@@ -7,23 +7,21 @@ Median and norm Combine spectra after
 from __future__ import division, print_function
 
 import argparse
-import logging
 import os
 import sys
-from typing import Any
+from typing import List, Union, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 from astropy.io import fits
+from numpy import float64, ndarray
 from tqdm import tqdm
 
 import optimal_nod_combo.bp_replacement as bp
 from optimal_nod_combo.Get_filenames import get_filenames
 
 
-# Try parse 4*8 bools.
-def parse_boolgrid(filename, nod=8, chip=4):
-    # type: (str, int, int) -> np.ndarray
+def parse_boolgrid(filename: str, nod: int = 8, chip: int = 4) -> ndarray:
     """Parse file with 4*8 bool values."""
     line_num = 0
     boolgrid = np.empty((chip, nod), dtype=bool)
@@ -45,8 +43,7 @@ def parse_boolgrid(filename, nod=8, chip=4):
 # Plot all 8 reduced spectra
 # Plot all 8 normalized reduced spectra
 # plot mean combined and median combined spectra.
-def _parser():
-    # type: () -> argparse.Namespace
+def _parser() -> argparse.Namespace:
     """Take care of all the argparse stuff.
 
     :returns: the args
@@ -69,8 +66,7 @@ def _parser():
     return args
 
 
-def main(**kwargs):
-    # type: (...) -> int
+def main(**kwargs) -> int:
     """Main function."""
     # Raising errors on non implemented features.
     if kwargs["spectralcoords"]:
@@ -106,7 +102,7 @@ def main(**kwargs):
     image_path = os.path.join(dir_path, "images", "")
     observation_name = os.path.split(dir_path)[-1]
 
-    created_files = []     # names of files created.
+    created_files = []  # type: List[str] # names of files created.
     for chip_num in tqdm(range(1, 5)):
         combined_name = get_filenames(combined_path, 'CRIRE*norm.sum.fits', "*_{0}.*".format(chip_num))
 
@@ -214,8 +210,7 @@ def main(**kwargs):
     return 0
 
 
-def nod_calcs(nods):
-    # type: (np.ndarray) -> List[np.ndarray, np.ndarray, np.ndarray]
+def nod_calcs(nods: ndarray) -> Tuple[ndarray, ndarray, ndarray]:
     """Return calculations across the nods."""
     nod_mean = np.mean(nods, axis=0)
     nod_median = np.median(nods, axis=0)
@@ -223,8 +218,7 @@ def nod_calcs(nods):
     return nod_mean, nod_median, nod_sum
 
 
-def clean_nods(nods):
-    # type: (Union[np.ndarray, List[List[float]]]) -> np.ndarray
+def clean_nods(nods: Union[ndarray, List[List[float]]]) -> ndarray:
     """Clean bad pixels from the nods."""
     nod_array = np.asarray(nods)
     bad_pixels = bp.sigma_detect(nod_array, plot=False)
@@ -239,9 +233,8 @@ def clean_nods(nods):
     return fixed_nods, bad_pixels
 
 
-def snr_calculations(nod_names, norm_names, nod_mask, chip_num):
-    # type: (List[str], List[str], np.ndarray, int) -> None
-    """Analysis signal to noise in a part of the continuim of each spectra."""
+def snr_calculations(nod_names: List[str], norm_names: List[str], nod_mask: ndarray, chip_num: int) -> None:
+    """Analysis signal to noise in a part of the continuum of each spectra."""
     optimal_nods = [fits.getdata(name)[0, 0] for name in nod_names]
     optimal_norm_nods = [fits.getdata(name)[0, 0] for name in norm_names]
     nonoptimal_nods = [fits.getdata(name)[1, 0] for name in nod_names]
@@ -273,9 +266,7 @@ def snr_calculations(nod_names, norm_names, nod_mask, chip_num):
         print("{} bad pixels num   = {}".format(key, len(bad_pix)))
 
 
-def sampled_snr(spectrum, chip):
-    # type: (Any, int) -> np.float64
-    """Sample SNR with Predefined continuim locations per chip."""
+def sampled_snr(spectrum: ndarray, chip: int) -> float64:
     limits = {1: [900, 960], 2: [460, 600], 3: [240, 310], 4: [450, 490]}
     section = spectrum[slice(limits[chip][0], limits[chip][1])]
     return np.mean(section) / np.std(section)
