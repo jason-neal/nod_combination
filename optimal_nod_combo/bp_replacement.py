@@ -7,15 +7,16 @@ import numpy as np
 from astropy.io import fits
 
 
-def sigma_detect(nods, plot=True):
-    # type: (Any, bool) -> List[Tuple[int, int]]
-    """Detect the local pixels that are outside 4sigma from all nods.
+def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[Tuple[int32, int]]:
+    """Detect the local pixels that are outside 4 sigma from all nods.
 
     Local means 2 pixels either side.
+    sigma: int
+       The sigma clipping value.
     """
     if isinstance(nods, list):
         raise TypeError("Input an nod*pixel array please.")
-    sig_clip = 4  # Sigma clipping Value.
+    sig_clip = sigma
     if nods.shape[0] > 8:
         raise ValueError("Too many nods (>8), check dimensions of input. ([nod, pixel])")
     # aviod mutation
