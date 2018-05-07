@@ -18,12 +18,12 @@ with open(os.path.join(base_dir, "optimal_nod_combo", "__about__.py")) as f:
     exec(f.read(), about)
 
 # https://www.reddit.com/r/Python/comments/3uzl2a/setuppy_requirementstxt_or_a_combination/
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+# with open('requirements.txt') as f:
+#    requirements = f.read().splitlines()
 
 setup(
     name='nod_combination',
-
+ 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
@@ -66,7 +66,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=requirements,
+    install_requires=["argparse", "astropy", "numpy", "matplotlib", "tqdm"],
     # install_requires=[],
     setup_requires=['pytest-runner'],
     tests_require=['pytest', "hypothesis"],
