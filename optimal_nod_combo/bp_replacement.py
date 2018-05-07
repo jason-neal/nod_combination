@@ -1,6 +1,6 @@
 """Identify bad pixel in nod observations and interpolate over them."""
 import logging
-from typing import List, Tuple, Union
+from typing import List, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
