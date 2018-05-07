@@ -30,19 +30,3 @@ def get_filenames(path: str, regexp: str, regexp2: Optional[str] = None) -> List
     filelist.sort()
     return filelist
 
-
-def main() -> None:
-    """Some test examples."""
-    path = "/home/jneal/data/BrownDwarfs-PedrosCode/HD30501-1/"
-
-    list1 = get_filenames(path, "*.ms.*")
-    for file in list1:
-        pass  # print file
-
-    list2 = get_filenames(path, "*.norm.*", "*_1.*")
-    for file in list2:
-        pass  # print file
-
-
-if __name__ == '__main__':
-    main()
