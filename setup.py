@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 # from setuptools.command.test import test as TestCommand
 # To use a consistent encoding
-from codecs import open
+import codecs
 import os
 
 long_description = " "
@@ -14,16 +14,16 @@ base_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)))
 
 
 about = {}
-with open(os.path.join(base_dir, "optimal_nod_combo", "__about__.py")) as f:
+with codecs.open(os.path.join(base_dir, "optimal_nod_combo", "__about__.py")) as f:
     exec(f.read(), about)
 
 # https://www.reddit.com/r/Python/comments/3uzl2a/setuppy_requirementstxt_or_a_combination/
-# with open('requirements.txt') as f:
+# with codecs.open('requirements.txt') as f:
 #    requirements = f.read().splitlines()
 
 setup(
     name='nod_combination',
- 
+
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
