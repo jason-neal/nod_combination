@@ -149,7 +149,7 @@ def test_fail_on_small_array(test_in):
     bad = [[0, 0], [1, 0]]
 
     with pytest.raises(ValueError):
-        interp_nods = pb.interp_badpixels(nods, bad)
+        pb.interp_badpixels(nods, bad)
 
 
 def test_allbadpixels():

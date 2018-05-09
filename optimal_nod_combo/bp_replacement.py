@@ -1,10 +1,10 @@
 """Identify bad pixel in nod observations and interpolate over them."""
 import logging
-from typing import List, Tuple, Union
+from typing import List, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy import int32, ndarray
+from numpy import ndarray
 
 
 def sigma_detect(nods: ndarray, sigma: int = 4, plot: bool = True) -> List[List[int]]:
