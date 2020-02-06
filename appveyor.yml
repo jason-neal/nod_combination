@@ -5,15 +5,20 @@ environment:
     # http://www.appveyor.com/docs/installed-software#python
     - PYTHON: "C:\\Python35"
     - PYTHON: "C:\\Python36"
-    - PYTHON: "C:\\Python35-x64"
+    - PYTHON: "C:\\Python37"
+    - PYTHON: "C:\\Python38"
     - PYTHON: "C:\\Python36-x64"
 
+cache:
+  - "%LOCALAPPDATA%\\pip\\Cache -> appveyor.yml"
+
 install:
+  - SET PATH=%PYTHON%;%PYTHON%\Scripts\;%path%
   # We need wheel installed to build wheels
   - "%PYTHON%\\python.exe -m pip install wheel"
 
   # Installing nod_combination now
-  - cmd: "cd c:\\projects\\nod_combination"
+  - cmd: "cd %APPVEYOR_BUILD_FOLDER%"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - "%PYTHON%\\python.exe -m pip install pytest pytest-cov"
   - "%PYTHON%\\python.exe setup.py install"
