@@ -18,7 +18,7 @@ install:
   - "%PYTHON%\\python.exe -m pip install wheel"
 
   # Installing nod_combination now
-  - cmd: "cd c:\\projects\\nod_combination"
+  - cmd: "cd %APPVEYOR_BUILD_FOLDER%"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - "%PYTHON%\\python.exe -m pip install pytest pytest-cov"
   - "%PYTHON%\\python.exe setup.py install"
