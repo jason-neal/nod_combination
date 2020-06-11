@@ -146,9 +146,9 @@ def test_multiple_bp_interpolation(test_in, bad, expected):
 def test_fail_on_small_array(test_in):
     """Test small arrays are failed."""
     nods = np.array(test_in, dtype=np.float32)
-    bad = [[0, 0], [1, 0]]
-
     with pytest.raises(ValueError):
+        bad = [[0, 0], [1, 0]]
+
         pb.interp_badpixels(nods, bad)
 
 

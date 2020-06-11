@@ -23,13 +23,11 @@ from optimal_nod_combo.Get_filenames import get_filenames
 
 def parse_boolgrid(filename: str, nod: int = 8, chip: int = 4) -> ndarray:
     """Parse file with 4*8 bool values."""
-    line_num = 0
     boolgrid = np.empty((chip, nod), dtype=bool)
     with open(filename) as f:
+        line_num = 0
         for line in f:
-            if line.startswith("#"):
-                pass
-            else:
+            if not line.startswith("#"):
                 line = line.strip()
 
                 assert len(line) == nod, "line length is wrong={}".format(len(line))
@@ -64,8 +62,7 @@ def _parser() -> argparse.Namespace:
     parser.add_argument("-p", "--plot", help="Show the plots.", action="store_true")
     parser.add_argument("--output_verify", help="Fits file verification mode", default="fix+warn")
     parser.add_argument("-r", "--overwrite", help="Overwrite output file if already exists", action="store_true")
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 def main(**kwargs) -> int:
